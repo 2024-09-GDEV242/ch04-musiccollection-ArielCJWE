@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * A class to hold details of audio tracks.
@@ -15,6 +16,8 @@ public class MusicOrganizer
     private MusicPlayer player;
     // A reader that can read music files and load them as tracks.
     private TrackReader reader;
+    //A randomizer to generate random numbers
+    private Random random;
 
     /**
      * Create a MusicOrganizer
@@ -24,11 +27,13 @@ public class MusicOrganizer
         tracks = new ArrayList<>();
         player = new MusicPlayer();
         reader = new TrackReader();
+        random = new Random();
         readLibrary("../audio");
         System.out.println("Music library loaded. " + getNumberOfTracks() + " tracks.");
         System.out.println();
     }
-    
+    /**Adding in the ramdomizer that randomly 
+        selects a track within the audio*/
     public void playArandomSong() {
         if (tracks.size() > 0){
             int randomIndex = (int) (Math.random() * tracks.size());
@@ -69,7 +74,25 @@ public class MusicOrganizer
             System.out.println("Now playing: " + track.getArtist() + " - " + track.getTitle());
         }
     }
-    
+    /** Added a randomizer util at the top to allow easier 
+     * randomization of int whilst also swapping the elements
+       whilst creating a variable to play each song 
+       in a random order */
+    public void playAllSongsOneTime() {
+        if(tracks.isEmpty()){
+            System.out.println("No available songs!");
+        }
+        for (int s = tracks.size() - 1; s > 0; s--) {
+            int r = random.nextInt(s + 1);
+            Track info = tracks.get(s);
+            tracks.set(s, tracks.get(r));
+            tracks.set(r, info);
+        }
+        for (Track track: tracks){
+            player.playSample(track.getFilename());
+            System.out.println("Now playing: " + track.getTitle() + " By -"+ track.getArtist());
+        }
+    }
     /**
      * Return the number of tracks in the collection.
      * @return The number of tracks in the collection.
